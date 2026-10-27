@@ -8,6 +8,8 @@ import {
   Waves,
   Coffee,
 } from "lucide-react";
+import BookingBar from "./components/BookingBar";
+import Navbar from "./components/Navbar";
 
 const villas = [
   {
@@ -38,46 +40,7 @@ function App() {
 
   return (
     <div className="bg-[#faf8f3] text-[#263d32]">
-      {/* Navbar */}
-      <nav className="absolute top-0 z-20 w-full text-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
-          <a href="#home" className="text-2xl font-semibold tracking-wide">
-            SERENE <span className="text-[#d9c5a0]">CEYLON</span>
-          </a>
-
-          <div className="hidden items-center gap-9 md:flex">
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#villas">Our Villas</a>
-            <a href="#contact">Contact</a>
-          </div>
-
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden"
-            aria-label="Toggle navigation"
-            aria-expanded={menuOpen}
-          >
-            {menuOpen ? <X /> : <Menu />}
-          </button>
-        </div>
-
-        {menuOpen && (
-          <div className="flex flex-col gap-5 bg-[#263d32] px-6 py-6 md:hidden">
-            {["home", "about", "villas", "contact"].map((item) => (
-              <a
-                key={item}
-                href={`#${item}`}
-                onClick={() => setMenuOpen(false)}
-                className="capitalize"
-              >
-                {item}
-              </a>
-            ))}
-          </div>
-        )}
-      </nav>
-
+      <Navbar />
       {/* Hero */}
       <section
         id="home"
@@ -92,9 +55,12 @@ function App() {
             Discover Paradise in Sri Lanka
           </p>
 
-          <h1 className="max-w-3xl font-serif text-5xl leading-tight md:text-7xl">
-            Escape to a World of Serenity
-          </h1>
+          <h1 className="max-w-4xl font-serif text-5xl font-normal leading-[1.12] tracking-tight sm:text-6xl lg:text-[76px]">
+  Escape to a World
+  <span className="block italic text-[#e7d3ad]">
+    of Serenity
+  </span>
+</h1>
 
           <p className="mt-6 max-w-xl text-lg text-gray-200">
             Experience timeless elegance, tropical beauty and
@@ -108,6 +74,14 @@ function App() {
             Explore Our Villas <ArrowRight size={19} />
           </a>
         </div>
+      </section>
+
+      {/* Booking Bar */}
+      <section
+        aria-label="Booking enquiry"
+        className="relative z-10 -mt-12 px-6 pb-10"
+      >
+        <BookingBar />
       </section>
 
       {/* About */}
