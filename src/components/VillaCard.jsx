@@ -14,6 +14,7 @@ export default function VillaCard({ villa }) {
           src={villa.image}
           alt={villa.name}
           loading="lazy"
+          decoding="async"
           className="h-72 w-full object-cover transition duration-700 group-hover:scale-105"
         />
       </Link>

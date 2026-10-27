@@ -1,33 +1,56 @@
 
 import { useState } from "react";
-import { CalendarDays, Send } from "lucide-react";
-import { villas } from "../data/villas";
+import { Send } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
+import { villas } from "../data/villas";
 
 export default function BookingForm({ selectedVilla = "" }) {
-    const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
-const initialCheckIn = searchParams.get("checkIn") || "";
-const initialCheckOut = searchParams.get("checkOut") || "";
-const initialGuests = searchParams.get("guests") || "2";
+  const initialCheckIn = searchParams.get("checkIn") || "";
+  const initialCheckOut = searchParams.get("checkOut") || "";
+  const initialGuests = searchParams.get("guests") || "2";
+
+  const initialVillaData = villas.find(
+    (villa) => villa.name === selectedVilla
+  );
+
+  const initialMaxGuests = initialVillaData?.guests || 6;
+
   const [form, setForm] = useState({
     name: "",
     email: "",
     phone: "",
     villa: selectedVilla,
     checkIn: initialCheckIn,
-checkOut: initialCheckOut,
-guests: initialGuests,
+    checkOut: initialCheckOut,
+    guests: String(
+      Math.min(
+        Math.max(1, Number(initialGuests) || 2),
+        initialMaxGuests
+      )
+    ),
     message: "",
   });
 
+  // Find the currently selected villa
+  const selectedVillaData = villas.find(
+    (villa) => villa.name === form.villa
+  );
+
+  // Maximum guests based on selected villa
+  const maxGuests = selectedVillaData?.guests || 6;
+
+  // Current date for date validation
   const today = new Date();
+
   const todayString = [
     today.getFullYear(),
     String(today.getMonth() + 1).padStart(2, "0"),
     String(today.getDate()).padStart(2, "0"),
   ].join("-");
 
+  // Handle input changes
   function handleChange(event) {
     const { name, value } = event.target;
 
@@ -42,11 +65,58 @@ guests: initialGuests,
     }));
   }
 
+  // Handle villa selection
+  function handleVillaChange(event) {
+    const villaName = event.target.value;
+
+    const villaData = villas.find(
+      (villa) => villa.name === villaName
+    );
+
+    const newMaxGuests = villaData?.guests || 6;
+
+    setForm((previous) => ({
+      ...previous,
+      villa: villaName,
+      guests: String(
+        Math.min(Number(previous.guests), newMaxGuests)
+      ),
+    }));
+  }
+
+  // Handle form submission
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (form.checkOut <= form.checkIn) {
-      alert("Check-out must be after check-in.");
+    const chosenVilla = villas.find(
+      (villa) => villa.name === form.villa
+    );
+
+    if (!chosenVilla) {
+      alert("Please select a valid villa.");
+      return;
+    }
+
+    const guestCount = Number(form.guests);
+
+    if (
+      !Number.isInteger(guestCount) ||
+      guestCount < 1 ||
+      guestCount > chosenVilla.guests
+    ) {
+      alert(
+        `This villa accommodates a maximum of ${chosenVilla.guests} guests.`
+      );
+      return;
+    }
+
+    if (
+      !form.checkIn ||
+      !form.checkOut ||
+      form.checkIn < todayString ||
+      form.checkOut <= form.checkIn
+    ) {
+      alert("Please select valid check-in and check-out dates.");
       return;
     }
 
@@ -76,11 +146,17 @@ guests: initialGuests,
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+
+      {/* Name and Email */}
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor="guest-name" className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor="guest-name"
+            className="mb-2 block text-sm font-medium"
+          >
             Full Name *
           </label>
+
           <input
             id="guest-name"
             name="name"
@@ -95,9 +171,13 @@ guests: initialGuests,
         </div>
 
         <div>
-          <label htmlFor="guest-email" className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor="guest-email"
+            className="mb-2 block text-sm font-medium"
+          >
             Email Address *
           </label>
+
           <input
             id="guest-email"
             name="email"
@@ -112,11 +192,16 @@ guests: initialGuests,
         </div>
       </div>
 
+      {/* Phone and Villa */}
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor="guest-phone" className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor="guest-phone"
+            className="mb-2 block text-sm font-medium"
+          >
             Phone Number *
           </label>
+
           <input
             id="guest-phone"
             name="phone"
@@ -131,20 +216,28 @@ guests: initialGuests,
         </div>
 
         <div>
-          <label htmlFor="villa-select" className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor="villa-select"
+            className="mb-2 block text-sm font-medium"
+          >
             Select Villa *
           </label>
+
           <select
             id="villa-select"
             name="villa"
             required
             value={form.villa}
-            onChange={handleChange}
+            onChange={handleVillaChange}
             className={inputStyle}
           >
             <option value="">Choose a villa</option>
+
             {villas.map((villa) => (
-              <option key={villa.id} value={villa.name}>
+              <option
+                key={villa.id}
+                value={villa.name}
+              >
                 {villa.name}
               </option>
             ))}
@@ -152,11 +245,16 @@ guests: initialGuests,
         </div>
       </div>
 
+      {/* Dates and Guests */}
       <div className="grid gap-5 sm:grid-cols-3">
         <div>
-          <label htmlFor="check-in" className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor="check-in"
+            className="mb-2 block text-sm font-medium"
+          >
             Check In *
           </label>
+
           <input
             id="check-in"
             name="checkIn"
@@ -170,9 +268,13 @@ guests: initialGuests,
         </div>
 
         <div>
-          <label htmlFor="check-out" className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor="check-out"
+            className="mb-2 block text-sm font-medium"
+          >
             Check Out *
           </label>
+
           <input
             id="check-out"
             name="checkOut"
@@ -186,29 +288,51 @@ guests: initialGuests,
         </div>
 
         <div>
-          <label htmlFor="guest-count" className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor="guest-count"
+            className="mb-2 block text-sm font-medium"
+          >
             Guests *
           </label>
+
           <select
             id="guest-count"
             name="guests"
+            required
             value={form.guests}
             onChange={handleChange}
             className={inputStyle}
           >
-            {[1, 2, 3, 4, 5, 6].map((count) => (
-              <option key={count} value={count}>
+            {Array.from(
+              { length: maxGuests },
+              (_, index) => index + 1
+            ).map((count) => (
+              <option
+                key={count}
+                value={count}
+              >
                 {count} {count === 1 ? "Guest" : "Guests"}
               </option>
             ))}
           </select>
+
+          {selectedVillaData && (
+            <p className="mt-2 text-xs text-gray-500">
+              Maximum {maxGuests} guests
+            </p>
+          )}
         </div>
       </div>
 
+      {/* Additional Message */}
       <div>
-        <label htmlFor="guest-message" className="mb-2 block text-sm font-medium">
+        <label
+          htmlFor="guest-message"
+          className="mb-2 block text-sm font-medium"
+        >
           Additional Message
         </label>
+
         <textarea
           id="guest-message"
           name="message"
@@ -220,6 +344,7 @@ guests: initialGuests,
         />
       </div>
 
+      {/* Submit */}
       <button
         type="submit"
         className="flex w-full items-center justify-center gap-3 bg-[#203a2e] px-8 py-4 font-semibold text-white transition hover:bg-[#395b49]"
