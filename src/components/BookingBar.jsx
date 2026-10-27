@@ -1,11 +1,13 @@
 
 import { useState } from "react";
 import { CalendarDays, Users, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function BookingBar() {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState("2");
+  const navigate = useNavigate();
 
   const today = new Date();
   const localToday = [
@@ -14,28 +16,22 @@ export default function BookingBar() {
     String(today.getDate()).padStart(2, "0"),
   ].join("-");
 
-  function handleEnquiry(e) {
-    e.preventDefault();
+ function handleEnquiry(e) {
+  e.preventDefault();
 
-    if (!checkIn || !checkOut || checkOut <= checkIn) {
-      alert("Please select valid check-in and check-out dates.");
-      return;
-    }
-
-    const subject = encodeURIComponent("Villa Booking Enquiry");
-    const body = encodeURIComponent(
-      `Hello Serene Ceylon Villas,\n\n` +
-      `I would like to enquire about a stay.\n\n` +
-      `Check-in: ${checkIn}\n` +
-      `Check-out: ${checkOut}\n` +
-      `Guests: ${guests}\n\n` +
-      `Please let me know about availability.`
-    );
-
-    window.location.href =
-      `mailto:hello@example.com?subject=${subject}&body=${body}`;
+  if (!checkIn || !checkOut || checkOut <= checkIn) {
+    alert("Please select valid check-in and check-out dates.");
+    return;
   }
 
+  const params = new URLSearchParams({
+    checkIn,
+    checkOut,
+    guests,
+  });
+
+  navigate(`/booking?${params.toString()}`);
+}
   return (
     <form
       onSubmit={handleEnquiry}

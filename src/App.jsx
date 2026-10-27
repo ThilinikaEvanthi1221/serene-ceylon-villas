@@ -1,47 +1,27 @@
-import { useState } from "react";
-import {
-  Menu,
-  X,
-  ArrowRight,
-  MapPin,
-  Wifi,
-  Waves,
-  Coffee,
-} from "lucide-react";
-import BookingBar from "./components/BookingBar";
+
+import { ArrowRight, Wifi, Waves, Coffee } from "lucide-react";
+import { Routes, Route } from "react-router-dom";
+
+// Components
 import Navbar from "./components/Navbar";
+import BookingBar from "./components/BookingBar";
+import About from "./components/About";
+import Villas from "./components/Villas";
+import ScrollManager from "./components/ScrollManager";
 
-const villas = [
-  {
-    name: "Ocean View Villa",
-    location: "Mirissa, Sri Lanka",
-    image:
-      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=900",
-    description: "A peaceful coastal escape with ocean views.",
-  },
-  {
-    name: "Tropical Garden Villa",
-    location: "Galle, Sri Lanka",
-    image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=900",
-    description: "Experience luxury surrounded by nature.",
-  },
-  {
-    name: "Private Pool Villa",
-    location: "Bentota, Sri Lanka",
-    image:
-      "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=900",
-    description: "Relax in your own private tropical retreat.",
-  },
-];
+// Pages
+import VillaDetails from "./pages/VillaDetails";
+import BookingPage from "./pages/BookingPage";
 
-function App() {
-  const [menuOpen, setMenuOpen] = useState(false);
+// ===============================
+// HOMEPAGE
+// ===============================
 
+function Home() {
   return (
     <div className="bg-[#faf8f3] text-[#263d32]">
-      <Navbar />
-      {/* Hero */}
+
+      {/* ================= HERO ================= */}
       <section
         id="home"
         className="relative flex min-h-[90vh] items-center bg-cover bg-center"
@@ -51,180 +31,197 @@ function App() {
         }}
       >
         <div className="mx-auto w-full max-w-7xl px-6 pt-24 text-white">
-          <p className="mb-5 uppercase tracking-[0.3em] text-[#e5cfaa]">
+
+          <p className="mb-5 text-sm uppercase tracking-[0.3em] text-[#e5cfaa]">
             Discover Paradise in Sri Lanka
           </p>
 
           <h1 className="max-w-4xl font-serif text-5xl font-normal leading-[1.12] tracking-tight sm:text-6xl lg:text-[76px]">
-  Escape to a World
-  <span className="block italic text-[#e7d3ad]">
-    of Serenity
-  </span>
-</h1>
+            Escape to a World
+            <span className="block italic text-[#e7d3ad]">
+              of Serenity
+            </span>
+          </h1>
 
-          <p className="mt-6 max-w-xl text-lg text-gray-200">
+          <p className="mt-6 max-w-xl text-lg leading-8 text-gray-200">
             Experience timeless elegance, tropical beauty and
             unforgettable stays at Serene Ceylon Villas.
           </p>
 
           <a
             href="#villas"
-            className="mt-9 inline-flex items-center gap-3 bg-[#d9c5a0] px-8 py-4 font-medium text-[#263d32] transition hover:bg-white"
+            className="mt-9 inline-flex items-center gap-3 bg-[#d9c5a0] px-8 py-4 font-medium text-[#263d32] transition duration-300 hover:bg-white"
           >
-            Explore Our Villas <ArrowRight size={19} />
+            Explore Our Villas
+            <ArrowRight size={19} />
           </a>
+
         </div>
       </section>
 
-      {/* Booking Bar */}
+      {/* ================= BOOKING BAR ================= */}
       <section
         aria-label="Booking enquiry"
-        className="relative z-10 -mt-12 px-6 pb-10"
+        className="relative z-10 -mt-12 px-6 pb-4"
       >
         <BookingBar />
       </section>
 
-      {/* About */}
-      <section id="about" className="px-6 py-24">
-        <div className="mx-auto max-w-5xl text-center">
-          <p className="mb-4 uppercase tracking-[0.25em] text-[#a38c65]">
-            Welcome to Serene Ceylon
-          </p>
+      {/* ================= ABOUT ================= */}
+      <About />
 
-          <h2 className="mb-7 font-serif text-4xl md:text-5xl">
-            Where Luxury Meets Nature
-          </h2>
+      {/* ================= VILLAS ================= */}
+      <Villas />
 
-          <p className="mx-auto max-w-3xl leading-8 text-gray-600">
-            Discover the beauty of Sri Lanka through thoughtfully
-            designed villas, peaceful surroundings and unforgettable
-            experiences. Every stay is an invitation to relax,
-            reconnect and create lasting memories.
-          </p>
-        </div>
-      </section>
+      {/* ================= AMENITIES ================= */}
+      <section className="bg-[#faf8f3] px-6 py-24">
 
-      {/* Villas */}
-      <section id="villas" className="bg-white px-6 py-24">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-14 text-center">
-            <p className="mb-4 uppercase tracking-[0.25em] text-[#a38c65]">
-              Our Collection
-            </p>
-            <h2 className="font-serif text-4xl md:text-5xl">
-              Discover Our Villas
-            </h2>
-          </div>
-
-          <div className="grid gap-8 md:grid-cols-3">
-            {villas.map((villa) => (
-              <div
-                key={villa.name}
-                className="group overflow-hidden bg-[#faf8f3] shadow-sm"
-              >
-                <div className="overflow-hidden">
-                  <img
-                    src={villa.image}
-                    alt={villa.name}
-                    loading="lazy"
-                    className="h-72 w-full object-cover transition duration-500 group-hover:scale-105"
-                  />
-                </div>
-
-                <div className="p-7">
-                  <div className="mb-3 flex items-center gap-2 text-sm text-gray-500">
-                    <MapPin size={15} />
-                    {villa.location}
-                  </div>
-
-                  <h3 className="mb-3 font-serif text-2xl">
-                    {villa.name}
-                  </h3>
-
-                  <p className="mb-6 text-gray-600">
-                    {villa.description}
-                  </p>
-
-                  <a
-                    href="#contact"
-                    className="inline-flex items-center gap-2 font-medium"
-                  >
-                    Enquire Now <ArrowRight size={17} />
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Amenities */}
-      <section className="px-6 py-24">
         <div className="mx-auto max-w-7xl text-center">
-          <h2 className="mb-14 font-serif text-4xl">
+
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-[#a38c65]">
+            The Serene Experience
+          </p>
+
+          <h2 className="mb-14 font-serif text-4xl text-[#203a2e] sm:text-5xl">
             Experience Exceptional Comfort
           </h2>
 
-          <div className="grid gap-10 sm:grid-cols-3">
+          <div className="grid gap-12 sm:grid-cols-3">
+
+            {/* Private Pools */}
             <div className="flex flex-col items-center gap-4">
-              <Waves size={36} />
-              <h3 className="text-xl font-medium">Private Pools</h3>
-              <p className="text-gray-600">
-                Relax in beautiful tropical surroundings.
+
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#e9e2d4]">
+                <Waves size={34} className="text-[#203a2e]" />
+              </div>
+
+              <h3 className="text-xl font-semibold">
+                Private Pools
+              </h3>
+
+              <p className="max-w-xs leading-7 text-gray-600">
+                Relax in beautiful tropical surroundings with
+                peaceful private swimming pools.
               </p>
+
             </div>
 
+            {/* Free WiFi */}
             <div className="flex flex-col items-center gap-4">
-              <Wifi size={36} />
-              <h3 className="text-xl font-medium">Free Wi-Fi</h3>
-              <p className="text-gray-600">
-                Stay connected throughout your visit.
+
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#e9e2d4]">
+                <Wifi size={34} className="text-[#203a2e]" />
+              </div>
+
+              <h3 className="text-xl font-semibold">
+                Complimentary Wi-Fi
+              </h3>
+
+              <p className="max-w-xs leading-7 text-gray-600">
+                Stay connected with reliable internet access
+                throughout your tropical getaway.
               </p>
+
             </div>
 
+            {/* Dining */}
             <div className="flex flex-col items-center gap-4">
-              <Coffee size={36} />
-              <h3 className="text-xl font-medium">Dining Experiences</h3>
-              <p className="text-gray-600">
-                Enjoy delightful local flavours.
+
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#e9e2d4]">
+                <Coffee size={34} className="text-[#203a2e]" />
+              </div>
+
+              <h3 className="text-xl font-semibold">
+                Dining Experiences
+              </h3>
+
+              <p className="max-w-xs leading-7 text-gray-600">
+                Discover delightful local flavours and memorable
+                dining experiences inspired by Sri Lanka.
               </p>
+
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* Contact */}
+      {/* ================= CONTACT ================= */}
       <section
         id="contact"
         className="bg-[#263d32] px-6 py-24 text-center text-white"
       >
-        <h2 className="mb-6 font-serif text-4xl md:text-5xl">
-          Your Paradise Awaits
-        </h2>
 
-        <p className="mx-auto mb-9 max-w-xl text-gray-300">
-          Plan your next tropical getaway and discover the beauty
-          of Sri Lanka.
-        </p>
+        <div className="mx-auto max-w-4xl">
 
-        <a
-          href="mailto:hello@example.com?subject=Villa%20Enquiry"
-          className="inline-flex items-center gap-3 bg-[#d9c5a0] px-9 py-4 font-medium text-[#263d32]"
-        >
-          Send an Enquiry <ArrowRight size={18} />
-        </a>
+          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.3em] text-[#d9c5a0]">
+            Begin Your Journey
+          </p>
 
-        <p className="mt-5 text-sm text-gray-400">
-          Portfolio demonstration — fictional property and contact details.
-        </p>
+          <h2 className="mb-6 font-serif text-4xl md:text-5xl">
+            Your Paradise Awaits
+          </h2>
+
+          <p className="mx-auto mb-10 max-w-xl leading-8 text-gray-300">
+            Plan your next tropical getaway and discover the beauty
+            of Sri Lanka through unforgettable villa experiences.
+          </p>
+
+          <a
+            href="mailto:hello@example.com?subject=Villa%20Enquiry"
+            className="inline-flex items-center gap-3 bg-[#d9c5a0] px-9 py-4 font-semibold text-[#263d32] transition duration-300 hover:bg-white"
+          >
+            Send an Enquiry
+            <ArrowRight size={18} />
+          </a>
+
+          <p className="mt-6 text-sm text-gray-400">
+            Portfolio demonstration — fictional property and
+            contact details.
+          </p>
+
+        </div>
       </section>
 
-      {/* Footer */}
+      {/* ================= FOOTER ================= */}
       <footer className="bg-[#1c3027] px-6 py-8 text-center text-sm text-gray-300">
-        © {new Date().getFullYear()} Serene Ceylon Villas.
-        Portfolio concept website.
+        <p>
+          © {new Date().getFullYear()} Serene Ceylon Villas.
+          All rights reserved.
+        </p>
+
+        <p className="mt-2 text-xs text-gray-400">
+          Portfolio Concept Website
+        </p>
       </footer>
+
     </div>
+  );
+}
+
+// ===============================
+// MAIN APPLICATION
+// ===============================
+
+function App() {
+  return (
+    <>
+      {/* Handle page and anchor scrolling */}
+      <ScrollManager />
+
+      {/* Shared Navbar */}
+      <Navbar />
+
+      {/* Website Routes */}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/villas/:slug"
+          element={<VillaDetails />}
+        />
+        <Route path="/booking" element={<BookingPage />} />
+      </Routes>
+    </>
   );
 }
 
